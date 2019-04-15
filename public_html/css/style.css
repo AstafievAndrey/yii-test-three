@@ -1,7 +1,9 @@
 * {
     box-sizing: border-box;
 }
-
+.url-arch {
+    text-decoration: underline;
+}
 canvas {
     padding: 0 50px 25px 0px;
 }
