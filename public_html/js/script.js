@@ -1,4 +1,8 @@
 jQuery.browser = {};
+var answers = {
+    first: [],
+    two: []
+};
 (function() {
   jQuery.browser.msie = !1;
   jQuery.browser.version = 0;
@@ -9,9 +13,6 @@ domen = "https://brandsoul.ru";
 domen_iframe = "alinaadt.ru/brandtypes";
 share = "https://alinaadt.ru/archetypes";
 $(document).ready(function() {
-  rank = [-1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
-  archs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-  balls = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   maxSteps = parseInt($("#max-steps").val()) + 1;
   stepWidth = $(".mws-line-no-back").width() / maxSteps;
   curWidth = $(".mws-line-no-back").width();
@@ -20,21 +21,54 @@ $(document).ready(function() {
   $(".mws-answer").on("click", onClickAnswer);
 });
 
+var archType = {
+    1: {balls: 0, count: 0},
+    2: {balls: 0, count: 0},
+    3: {balls: 0, count: 0},
+    4: {balls: 0, count: 0},
+    5: {balls: 0, count: 0},
+    6: {balls: 0, count: 0},
+    7: {balls: 0, count: 0},
+    8: {balls: 0, count: 0},
+    9: {balls: 0, count: 0},
+    10: {balls: 0, count: 0},
+    11: {balls: 0, count: 0},
+    12: {balls: 0, count: 0},
+    13: {balls: 0, count: 0},
+}
+
+function sortArchType () {
+    return Object.keys(archType).sort((a,b) => {
+        return  archType[b].balls - archType[a].balls
+    });
+}
+
+
+var click = 1;
 function onClickAnswer (a) {
     a.stopPropagation();
     a = $("#current_step").val();
-    var b = $(".mws-question-step-" + a + " .mws-answers");
+    var dataTypeArch = $(this).find(".mws-aanswer-text").attr("data-type-arch");
+
     if ($(this).hasClass("mws-vote")) {
-        rank[a]--;
-        $(this).find(".mws-rank-number") .text("");
         $(this).removeClass("mws-vote");
-        if( 1 == $(this).attr("data-rank")) {
-            b.find('.mws-answer[data-rank="2"] .mws-rank-number').text("1");
-            b.find('.mws-answer[data-rank="2"]').attr("data-rank", "1");
-        }
-        $(this).attr("data-rank", 0);
+        $(this).find(".mws-rank-number").text("");
+        click = 1;
+        archType[parseInt(dataTypeArch)].balls -= 3;
+        archType[parseInt(dataTypeArch)].count--;
     } else {
-        if(1 < rank[a]) {
+        $(this).addClass("mws-vote");
+        $(this).find(".mws-rank-number").text(click);
+        if (click === 1){
+            archType[parseInt(dataTypeArch)].balls += 3;
+            archType[parseInt(dataTypeArch)].count++;
+            click++;
+            console.log(`${dataTypeArch} = 3`);
+        } else {
+            archType[parseInt(dataTypeArch)].balls += 2;
+            archType[parseInt(dataTypeArch)].count++;
+            click = 1;
+            console.log(`${dataTypeArch} = 2`);
             fetch(`${$("#url_questions").val()}?question_id=${+a+1}`)
             .then((response) => {
                 return response.json();
@@ -45,20 +79,6 @@ function onClickAnswer (a) {
                 $(".mws-answer").on("click", onClickAnswer);
                 next();
             });
-        } else {
-            $(this).find(".mws-rank-number").text(rank[a]);
-            if(1 == rank[a]) {
-                curRank_1 = $(this).find(".mws-aanswer-text").attr("data-type-arch");
-                balls[curRank_1] += 3;
-                countsarr[a] = curRank_1;
-            }
-            if(2 == rank[a]) {
-                curRank_2 = $(this).find(".mws-aanswer-text").attr("data-type-arch");
-                balls[curRank_2] += 2;
-                countsarr[a] = curRank_2;
-            }
-            rank[a]++;
-            $(this).addClass("mws-vote");
         }
     }
 }
@@ -95,25 +115,6 @@ function next() {
     $(".mws-question-step-" + a).show();
 }
 
-function get_max_repeaters_value(a) {
-  return (function(a) {
-    return a.reduce(function(a, b) {
-      var c = {};
-      return Object.assign(a, ((c[b] = (a[b] || 0) + 1), c));
-    }, {});
-  })(void 0 === a ? "" : a);
-}
-
-function sortMapByValue(a) {
-  var b = [],
-    c;
-  for (c in a) b.push([c, a[c]]);
-  b.sort(function(a, b) {
-    return b[1] - a[1];
-  });
-  return b;
-}
-
 function vendor_pie(a) {
   $.plot("#pie-chart", a, {
     series: {
@@ -143,19 +144,25 @@ function vendor_pie(a) {
   });
 }
 
-balls = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-countsarr = [];
-curRank_2 = curRank_1 = "";
-function get_result() {
-  vat = get_max_repeaters_value(countsarr);
-  sortVat = sortMapByValue(vat);
-  sortballs = sortMapByValue(balls);
-  max_balls_item_1 = sortballs[0];
-  max_balls_item_2 = sortballs[1];
-  max_balls_item_3 = sortballs[2];
+function dopBalls() {
+    for (var key in archType) {
+        if (archType[key].count >= 9) {
+            archType[key].balls += 3;
+        } else if (archType[key].count >= 8) {
+            archType[key].balls += 2;
+        } else if (archType[key].count >= 7) {
+            archType[key].balls += 1;
+        }
+    }
 }
 
-three = second = first = null;
+function get_result() {
+  dopBalls();
+  var sortballs = sortArchType ();
+  max_balls_item_1 = [sortballs[0], archType[sortballs[0]].balls];
+  max_balls_item_2 = [sortballs[1], archType[sortballs[1]].balls];
+  max_balls_item_3 = [sortballs[2], archType[sortballs[2]].balls];
+}
 
 function start_calculated() {
   get_result();
@@ -175,30 +182,12 @@ function start_calculated() {
   var b = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').text(),
     c = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').text(),
     d = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').text(),
-    h = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').attr(
-      "data-url-arch"
-    ),
-    k = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').attr(
-      "data-url-arch"
-    ),
-    l = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').attr(
-      "data-url-arch"
-    ),
-    e =
-      "#" +
-      $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').attr(
-        "data-color"
-      ),
-    f =
-      "#" +
-      $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').attr(
-        "data-color"
-      ),
-    g =
-      "#" +
-      $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').attr(
-        "data-color"
-      );
+    h = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').attr("data-url-arch"),
+    k = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').attr("data-url-arch"),
+    l = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').attr("data-url-arch"),
+    e = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').attr("data-color"),
+    f = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').attr("data-color"),
+    g = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').attr("data-color");
   maincolors = [e, f, g];
   vendor_pie(a);
   $(".archi-first").text(b);
@@ -222,16 +211,6 @@ function start_calculated() {
   $("#result-desc-archtype-3")
     .find(".title-arch")
     .css("color", g);
-}
-
-function testDrawing() {
-  var a = document.getElementById("canvas").getContext("2d");
-  a.save();
-  a.beginPath();
-  a.moveTo(10, 10);
-  a.lineTo(340, 340);
-  a.stroke();
-  a.restore();
 }
 
 function getImage(a) {
