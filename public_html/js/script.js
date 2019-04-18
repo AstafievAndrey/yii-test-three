@@ -63,12 +63,10 @@ function onClickAnswer (a) {
             archType[parseInt(dataTypeArch)].balls += 3;
             archType[parseInt(dataTypeArch)].count++;
             click++;
-            console.log(`${dataTypeArch} = 3`);
         } else {
             archType[parseInt(dataTypeArch)].balls += 2;
             archType[parseInt(dataTypeArch)].count++;
             click = 1;
-            console.log(`${dataTypeArch} = 2`);
             fetch(`${$("#url_questions").val()}?question_id=${+a+1}`)
             .then((response) => {
                 return response.json();
@@ -288,10 +286,10 @@ Share = {
 };
 
 function setShareBtn() {
+  var a = $("#name-type-1").text();
   var action = function (event) {
     event.preventDefault();
     $("#result-desc-archtype-1").text();
-    var a = $("#name-type-1").text();
     console.log(domen + URLIMG);
   }
   $("#share_vk").on("click", function(event) {
