@@ -164,9 +164,10 @@ function get_result() {
 
 function start_calculated() {
   get_result();
-  label_1 = $('.arch[data-id-arch="' + max_balls_item_1[0] + '"').text();
-  label_2 = $('.arch[data-id-arch="' + max_balls_item_2[0] + '"').text();
-  label_3 = $('.arch[data-id-arch="' + max_balls_item_3[0] + '"').text();
+  console.log(max_balls_item_1[0]);
+  label_1 = $('.arch[data-id-arch="' + max_balls_item_1[0] + '"]').text();
+  label_2 = $('.arch[data-id-arch="' + max_balls_item_2[0] + '"]').text();
+  label_3 = $('.arch[data-id-arch="' + max_balls_item_3[0] + '"]').text();
   var a =
     parseInt(max_balls_item_1[1]) +
     parseInt(max_balls_item_2[1]) +
@@ -177,15 +178,15 @@ function start_calculated() {
     { label: label_2, data: Math.round(a * max_balls_item_2[1]) },
     { label: label_3, data: Math.round(a * max_balls_item_3[1]) }
   ];
-  var b = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').text(),
-    c = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').text(),
-    d = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').text(),
-    h = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').attr("data-url-arch"),
-    k = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').attr("data-url-arch"),
-    l = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').attr("data-url-arch"),
-    e = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"').attr("data-color"),
-    f = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"').attr("data-color"),
-    g = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"').attr("data-color");
+  var b = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"]').text(),
+    c = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"]').text(),
+    d = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"]').text(),
+    h = $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"]').attr("data-url-arch"),
+    k = $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"]').attr("data-url-arch"),
+    l = $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"]').attr("data-url-arch"),
+    e = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_1[0] + '"]').attr("data-color"),
+    f = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_2[0] + '"]').attr("data-color"),
+    g = "#" + $('.arch-desc[data-id-arch="' + max_balls_item_3[0] + '"]').attr("data-color");
   maincolors = [e, f, g];
   vendor_pie(a);
   $(".archi-first").text(b);
